@@ -1,1 +1,3 @@
-# famous_model_with_jax_flax
+# Study Flax with famous models
+
+TBD
