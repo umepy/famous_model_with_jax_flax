@@ -10,10 +10,9 @@ RUN apt-get -y install wget curl tzdata git libgl1-mesa-dev
 RUN apt-get -y install libopencv-dev
 
 WORKDIR /work
-COPY requirements.txt /work/requirements.txt
 
 RUN python3.9 -m pip install --upgrade pip
-RUN python3.9 -m pip install opencv-python numpy tqdm tensorboard torchinfo
+RUN python3.9 -m pip install opencv-python numpy tqdm tensorboard torchinfo black flake8 isort
 
 # install jax
 RUN python3.9 -m pip install --upgrade "jax[cuda]" -f https://storage.googleapis.com/jax-releases/jax_releases.html
