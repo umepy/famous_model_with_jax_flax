@@ -1,6 +1,7 @@
-# Study famous models with flax
+# beggining Computer Vision with Flax
 
-TBD
+CVFlax is a material to study Computer Vision using Flax
+
 ## Models
 
 1. **AlexNet**
