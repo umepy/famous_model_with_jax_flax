@@ -12,7 +12,7 @@ RUN apt-get -y install libopencv-dev
 WORKDIR /work
 
 RUN python3.9 -m pip install --upgrade pip
-RUN python3.9 -m pip install opencv-python numpy tqdm tensorboard torchinfo black flake8 isort
+RUN python3.9 -m pip install opencv-python numpy tqdm tensorboard torchinfo black flake8 isort ipykernel
 
 # install jax
 RUN python3.9 -m pip install --upgrade "jax[cuda]" -f https://storage.googleapis.com/jax-releases/jax_releases.html
