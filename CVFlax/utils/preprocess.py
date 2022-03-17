@@ -69,16 +69,20 @@ def alexnet_dataloader(batch_size=128):
             transforms.CenterCrop(256),
             transforms.RandomCrop(227),
             transforms.RandomHorizontalFlip(p=0.5),
-            jnp_transform,
+            transforms.ToTensor(),
             transforms.Normalize((0.54498774, 0.4434933, 0.34360075), (0.23354167, 0.24430245, 0.24236338)),
+            transforms.ToPILImage(),
+            jnp_transform,
         ]
     )
     test_transform = transforms.Compose(
         [
             transforms.Resize(256),
             transforms.TenCrop(227),
-            jnp_transform,
+            transforms.ToTensor(),
             transforms.Normalize((0.54498774, 0.4434933, 0.34360075), (0.23354167, 0.24430245, 0.24236338)),
+            transforms.ToPILImage(),
+            jnp_transform,
         ]
     )
     trainset = datasets.ImageFolder("./data/food-101/train/", transform=train_transform)
