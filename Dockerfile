@@ -19,4 +19,4 @@ RUN python3.9 -m pip install --upgrade "jax[cuda]" -f https://storage.googleapis
 RUN python3.9 -m pip install flax
 
 # install pytorch
-RUN python3.9 -m pip install torch==1.10.1+cu113 torchvision==0.11.2+cu113 torchaudio==0.10.1+cu113 -f https://download.pytorch.org/whl/cu113/torch_stable.html
+RUN python3.9 -m pip install torch==1.11.0+cu113 torchvision==0.12.0+cu113 -f https://download.pytorch.org/whl/cu113/torch_stable.html
