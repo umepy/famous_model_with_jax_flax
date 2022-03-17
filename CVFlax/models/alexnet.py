@@ -4,6 +4,8 @@ from flax import linen as nn
 
 
 class AlexNet(nn.Module):
+    """This implementation is not "pure" AlexNet. See the details in "ImageNet Classification with Deep Convolutional Neural Networks" """
+
     @nn.compact
     def __call__(self, x, output_dim=1000):
         x = nn.Conv(features=96, kernel_size=(11, 11), strides=(4, 4), padding=((0, 0), (0, 0)))(x)  # 55x55
