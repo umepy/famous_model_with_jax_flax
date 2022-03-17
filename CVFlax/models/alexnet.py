@@ -6,8 +6,10 @@ from flax import linen as nn
 class AlexNet(nn.Module):
     """This implementation is not "pure" AlexNet. See the details in "ImageNet Classification with Deep Convolutional Neural Networks" """
 
+    output_dim: int = 1000
+
     @nn.compact
-    def __call__(self, x, output_dim=1000):
+    def __call__(self, x):
         x = nn.Conv(features=96, kernel_size=(11, 11), strides=(4, 4), padding=((0, 0), (0, 0)))(x)  # 55x55
         x = nn.relu(x)
 
@@ -33,7 +35,7 @@ class AlexNet(nn.Module):
         x = nn.Dense(features=4096)(x)
         x = nn.relu(x)
 
-        x = nn.Dense(features=output_dim)(x)
+        x = nn.Dense(features=self.output_dim)(x)
         x = nn.softmax(x)
         return x
 
