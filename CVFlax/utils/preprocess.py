@@ -10,7 +10,9 @@ from tqdm import tqdm
 
 
 def jnp_transform(x):
-    return jnp.array(x) / 255.0
+    x = jnp.array(x)
+    x = jnp.transpose(x, (1, 2, 0))
+    return x
 
 
 def collate_fn(batch):
@@ -71,7 +73,6 @@ def alexnet_dataloader(path="./data", batch_size=128):
             transforms.RandomHorizontalFlip(p=0.5),
             transforms.ToTensor(),
             transforms.Normalize((0.54498774, 0.4434933, 0.34360075), (0.23354167, 0.24430245, 0.24236338)),
-            transforms.ToPILImage(),
             jnp_transform,
         ]
     )
@@ -81,7 +82,6 @@ def alexnet_dataloader(path="./data", batch_size=128):
             transforms.TenCrop(227),
             transforms.ToTensor(),
             transforms.Normalize((0.54498774, 0.4434933, 0.34360075), (0.23354167, 0.24430245, 0.24236338)),
-            transforms.ToPILImage(),
             jnp_transform,
         ]
     )
@@ -97,4 +97,7 @@ def alexnet_dataloader(path="./data", batch_size=128):
 
 
 if __name__ == "__main__":
-    calculate_mean_std_food101()
+    d, _ = alexnet_dataloader(path="CVFlax/colab/data")
+    for x, y in d:
+        print(x.shape)
+        exit()
