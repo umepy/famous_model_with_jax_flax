@@ -20,24 +20,24 @@ def collate_fn(batch):
     return x, y
 
 
-def download_food101():
-    datasets.Food101("./data/", download=True)
+def download_food101(path="./data"):
+    datasets.Food101(path, download=True)
 
-    if not os.path.exists("./data/food-101/train"):
+    if not os.path.exists(f"{path}/food-101/train"):
         print("Splitting dataset to train and test...")
-        images = glob("./data/food-101/images/*/*")
-        train_files = json.load(open("./data/food-101/meta/train.json", "r"))
-        test_files = json.load(open("./data/food-101/meta/test.json", "r"))
-        images = [x.replace("./data/food-101/images/", "").replace(".jpg", "") for x in images]
+        images = glob(f"{path}/food-101/images/*/*")
+        train_files = json.load(open(f"{path}/food-101/meta/train.json", "r"))
+        test_files = json.load(open(f"{path}/food-101/meta/test.json", "r"))
+        images = [x.replace(f"{path}/food-101/images/", "").replace(".jpg", "") for x in images]
 
         for i in tqdm(images):
             category = i.split("/")[0]
             if i in train_files[category]:
-                os.makedirs(f"./data/food-101/train/{category}", exist_ok=True)
-                shutil.copy(f"./data/food-101/images/{i}.jpg", f"./data/food-101/train/{i}.jpg")
+                os.makedirs(f"{path}/food-101/train/{category}", exist_ok=True)
+                shutil.copy(f"{path}/food-101/images/{i}.jpg", f"{path}/food-101/train/{i}.jpg")
             elif i in test_files[category]:
-                os.makedirs(f"./data/food-101/test/{category}", exist_ok=True)
-                shutil.copy(f"./data/food-101/images/{i}.jpg", f"./data/food-101/test/{i}.jpg")
+                os.makedirs(f"{path}/food-101/test/{category}", exist_ok=True)
+                shutil.copy(f"{path}/food-101/images/{i}.jpg", f"{path}/food-101/test/{i}.jpg")
             else:
                 raise Exception()
     else:
@@ -62,7 +62,7 @@ def calculate_mean_std_food101():
     print(f"mean:{mean}, std:{std}")
 
 
-def alexnet_dataloader(batch_size=128):
+def alexnet_dataloader(path="./data", batch_size=128):
     train_transform = transforms.Compose(
         [
             transforms.Resize(256),
@@ -85,8 +85,8 @@ def alexnet_dataloader(batch_size=128):
             jnp_transform,
         ]
     )
-    trainset = datasets.ImageFolder("./data/food-101/train/", transform=train_transform)
-    testset = datasets.ImageFolder("./data/food-101/test/", transform=test_transform)
+    trainset = datasets.ImageFolder(f"{path}/food-101/train/", transform=train_transform)
+    testset = datasets.ImageFolder(f"{path}/food-101/test/", transform=test_transform)
     train_loader = DataLoader(
         dataset=trainset, batch_size=batch_size, shuffle=True, collate_fn=collate_fn, num_workers=0
     )
