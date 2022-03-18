@@ -36,7 +36,6 @@ class AlexNet(nn.Module):
         x = nn.relu(x)
 
         x = nn.Dense(features=self.output_dim)(x)
-        x = nn.softmax(x)
         return x
 
 
