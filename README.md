@@ -1,6 +1,6 @@
 # beggining Computer Vision with Flax
 
-CVFlax is a material to study Computer Vision using Flax
+CVFlax is a material to study Computer Vision models using Flax
 
 
 ## Models
@@ -18,7 +18,7 @@ We uses `Food-101` dataset.
 - mean: `[0.54498774 0.4434933  0.34360075]`
 - std: `[0.23354167 0.24430245 0.24236338]`
 
-### memo
+## Implementation memo
 
 - Convのstrideは`int`ではなく、縦方向と横方向分で`Tuple(int,int)`で渡す
 - Convのpaddingは`int`ではなく、上下左右の幅として`Tuple(Tuple(int,int),Tuple(int,int))`で渡す
