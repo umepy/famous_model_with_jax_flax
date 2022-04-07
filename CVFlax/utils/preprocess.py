@@ -10,6 +10,7 @@ from tqdm import tqdm
 
 
 def jnp_transform(x):
+    """transform to jnp array"""
     x = jnp.array(x)
     x = jnp.transpose(x, (1, 2, 0))
     return x
@@ -43,10 +44,11 @@ def download_food101(path="./data"):
             else:
                 raise Exception()
     else:
-        print("seems already splitted, so skipping to split dataset")
+        print("seems already being downloaded, so skipping to split dataset")
 
 
 def calculate_mean_std_food101():
+    """calculate mean and std of food101 dataset"""
     alexnet_transform = transforms.Compose([jnp_transform, lambda x: jnp.transpose(x, (2, 0, 1))])
     trainset = datasets.ImageFolder("./data/food-101/train/", transform=alexnet_transform)
     train_loader = DataLoader(dataset=trainset, batch_size=1, shuffle=False, collate_fn=collate_fn, num_workers=0)
