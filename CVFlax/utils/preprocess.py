@@ -3,23 +3,23 @@ import os
 import shutil
 from glob import glob
 
-import jax.numpy as jnp
+import numpy as np
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 from tqdm import tqdm
 
 
-def jnp_transform(x):
+def np_transform(x):
     """transform to jnp array"""
-    x = jnp.array(x)
-    x = jnp.transpose(x, (1, 2, 0))
+    x = np.array(x)
+    x = np.transpose(x, (1, 2, 0))
     return x
 
 
 def collate_fn(batch):
     batch = list(zip(*batch))
-    x = jnp.stack(batch[0])
-    y = jnp.array(batch[1])
+    x = np.stack(batch[0])
+    y = np.array(batch[1])
     return x, y
 
 
@@ -49,24 +49,24 @@ def download_food101(path="./data"):
 
 def calculate_mean_std_food101():
     """calculate mean and std of food101 dataset"""
-    alexnet_transform = transforms.Compose([jnp_transform, lambda x: jnp.transpose(x, (2, 0, 1))])
+    alexnet_transform = transforms.Compose([np_transform, lambda x: np.transpose(x, (2, 0, 1))])
     trainset = datasets.ImageFolder("./data/food-101/train/", transform=alexnet_transform)
     train_loader = DataLoader(dataset=trainset, batch_size=1, shuffle=False, collate_fn=collate_fn, num_workers=0)
 
-    mean = jnp.zeros(3)
-    std = jnp.zeros(3)
+    mean = np.zeros(3)
+    std = np.zeros(3)
     bar = tqdm(total=len(trainset))
     for idx, (x, y) in enumerate(train_loader):
         bar.update(1)
         x = x.reshape(3, -1)
-        mean += jnp.mean(x, axis=1)
-        std += jnp.std(x, axis=1)
+        mean += np.mean(x, axis=1)
+        std += np.std(x, axis=1)
     mean /= len(trainset)
     std /= len(trainset)
     print(f"mean:{mean}, std:{std}")
 
 
-def alexnet_dataloader(path="./data", batch_size=128):
+def alexnet_dataloader(path="./data", batch_size=128, num_workers=4):
     train_transform = transforms.Compose(
         [
             transforms.Resize(256),
@@ -75,7 +75,7 @@ def alexnet_dataloader(path="./data", batch_size=128):
             transforms.RandomHorizontalFlip(p=0.5),
             transforms.ToTensor(),
             transforms.Normalize((0.54498774, 0.4434933, 0.34360075), (0.23354167, 0.24430245, 0.24236338)),
-            jnp_transform,
+            np_transform,
         ]
     )
     test_transform = transforms.Compose(
@@ -84,16 +84,21 @@ def alexnet_dataloader(path="./data", batch_size=128):
             transforms.TenCrop(227),
             transforms.ToTensor(),
             transforms.Normalize((0.54498774, 0.4434933, 0.34360075), (0.23354167, 0.24430245, 0.24236338)),
-            jnp_transform,
+            np_transform,
         ]
     )
     trainset = datasets.ImageFolder(f"{path}/food-101/train/", transform=train_transform)
     testset = datasets.ImageFolder(f"{path}/food-101/test/", transform=test_transform)
     train_loader = DataLoader(
-        dataset=trainset, batch_size=batch_size, shuffle=True, collate_fn=collate_fn, num_workers=0, pin_memory=True
+        dataset=trainset,
+        batch_size=batch_size,
+        shuffle=True,
+        collate_fn=collate_fn,
+        num_workers=num_workers,
+        pin_memory=True,
     )
     test_loader = DataLoader(
-        dataset=testset, batch_size=batch_size, shuffle=False, collate_fn=collate_fn, num_workers=0
+        dataset=testset, batch_size=batch_size, shuffle=False, collate_fn=collate_fn, num_workers=num_workers
     )
     return train_loader, test_loader
 
