@@ -90,7 +90,7 @@ def alexnet_dataloader(path="./data", batch_size=128):
     trainset = datasets.ImageFolder(f"{path}/food-101/train/", transform=train_transform)
     testset = datasets.ImageFolder(f"{path}/food-101/test/", transform=test_transform)
     train_loader = DataLoader(
-        dataset=trainset, batch_size=batch_size, shuffle=True, collate_fn=collate_fn, num_workers=0
+        dataset=trainset, batch_size=batch_size, shuffle=True, collate_fn=collate_fn, num_workers=0, pin_memory=True
     )
     test_loader = DataLoader(
         dataset=testset, batch_size=batch_size, shuffle=False, collate_fn=collate_fn, num_workers=0
