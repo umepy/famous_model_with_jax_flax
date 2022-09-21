@@ -1,3 +1,5 @@
 .devcontainer
 data
 __pycache__
+runs
+*checkpoint*
