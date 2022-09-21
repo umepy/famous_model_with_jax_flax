@@ -4,6 +4,7 @@ import shutil
 from glob import glob
 
 import numpy as np
+import torch
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 from tqdm import tqdm
@@ -13,6 +14,13 @@ def np_transform(x):
     """transform to jnp array"""
     x = np.array(x)
     x = np.transpose(x, (1, 2, 0))
+    return x
+
+
+def np_transform_test(x):
+    """transform to jnp array"""
+    x = np.array(x)
+    x = np.transpose(x, (0, 2, 3, 1))
     return x
 
 
@@ -81,10 +89,10 @@ def alexnet_dataloader(path="./data", batch_size=128, num_workers=4):
     test_transform = transforms.Compose(
         [
             transforms.Resize(256),
-            transforms.TenCrop(227),
-            transforms.ToTensor(),
+            transforms.FiveCrop(227),
+            lambda crops: torch.stack([transforms.ToTensor()(crop) for crop in crops]),
             transforms.Normalize((0.54498774, 0.4434933, 0.34360075), (0.23354167, 0.24430245, 0.24236338)),
-            np_transform,
+            np_transform_test,
         ]
     )
     trainset = datasets.ImageFolder(f"{path}/food-101/train/", transform=train_transform)
@@ -104,7 +112,7 @@ def alexnet_dataloader(path="./data", batch_size=128, num_workers=4):
 
 
 if __name__ == "__main__":
-    d, _ = alexnet_dataloader(path="CVFlax/colab/data")
+    _, d = alexnet_dataloader(path="CVFlax/colab/data")
     for x, y in d:
         print(x.shape)
         exit()
